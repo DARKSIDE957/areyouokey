@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARE YOU OKEY</title>
+    <style>
+        :root {
+            --primary: #ffffff;
+            --secondary: #1a1a1a;
+            --accent: #1a1a1a;
+            --text: #ffffff;
+            --gray: #444;
+            --gray-light: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--accent);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--gray-light);
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+
+        .question-count {
+            color: var(--gray-light);
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .question {
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .button {
+            padding: 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .yes-button {
+            background-color: var(--primary);
+            color: var(--secondary);
+        }
+
+        .no-button {
+            background-color: #2d2d2d;
+            color: var(--gray-light);
+        }
+
+        .yes-button.selected,
+        .yes-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .no-button.selected,
+        .no-button:hover {
+            background-color: #444;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            background-color: #2d2d2d;
+            color: var(--gray-light);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .nav-button:hover {
+            background-color: #444;
+        }
+
+        .nav-button:disabled {
+            background-color: #1a1a1a;
+            cursor: not-allowed;
+            color: #555;
+        }
+
+        .result-container {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .score {
+            color: var(--gray-light);
+        }
+
+        .result-message,
+        .random-message {
+            background-color: #2d2d2d;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .random-message {
+            font-style: italic;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .restart-button {
+            background-color: var(--primary);
+            color: var(--secondary);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .restart-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .support-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-light);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .support-link:hover {
+            transform: translateX(4px);
+        }
+
+        .support-icon {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray-light);
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <h1>ARE YOU OKEY</h1>
+        <p class="subtitle">Made by virus • Discord: _omv</p>
+
+        <!-- Quiz Section -->
+        <div id="quiz-section">
+            <div class="question-count" id="question-count">Question 1 of 30</div>
+            <div class="question" id="question-text">Sample question text</div>
+            
+            <div class="buttons">
+                <button class="button yes-button" id="yes-button">Yes</button>
+                <button class="button no-button" id="no-button">No</button>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-button" id="back-button" disabled>Back</button>
+                <button class="nav-button" id="next-button" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div id="result-section" class="result-container">
+            <h2 class="result-title">Your Well-being Report</h2>
+            
+            <div>
+                <p class="score" id="score-text">You answered "yes" to 0 out of 30 questions.</p>
+                <div class="result-message" id="result-message">Result message here</div>
+            </div>
+
+            <div>
+                <h3 class="result-title">Remember:</h3>
+                <div class="random-message" id="random-message">Random message here</div>
+            </div>
+
+            <div class="actions">
+                <button class="restart-button" id="restart-button">Take the Check-in Again</button>
+                <a href="http://buymeacoffee.com/Omv1" target="_blank" class="support-link">
+                    <span>💸 Support Me</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 ARE YOU OKEY • With ❤️ • Will be updated once in a blue moon (or when virus procrastinates on real work)</p>
+    </footer>
+
+    <script>
+        // Data
+        const questions = [
+            "Have you smiled today?",
+            "Did you get enough sleep last night?",
+            "Do you feel rested?",
+            "Have you taken a break today?",
+            "Are you hydrated?",
+            "Did you eat something healthy today?",
+            "Do you feel calm right now?",
+            "Have you talked to someone you trust recently?",
+            "Are you feeling hopeful about the future?",
+            "Have you done something that makes you happy lately?",
+            "Do you feel appreciated by others?",
+            "Have you set any small goals for yourself lately?",
+            "Do you take time for yourself regularly?",
+            "Have you expressed gratitude today?",
+            "Do you feel in control of your life?",
+            "Have you moved your body today?",
+            "Do you have a place where you feel safe and comfortable?",
+            "Do you allow yourself to rest without guilt?",
+            "Have you been kind to yourself lately?",
+            "Do you feel connected to the people around you?",
+            "Have you laughed today?",
+            "Do you believe in your abilities?",
+            "Have you taken a moment to breathe deeply today?",
+            "Do you enjoy what you do most days?",
+            "Have you said 'no' when you needed to?",
+            "Have you celebrated any small wins recently?",
+            "Do you feel physically comfortable right now?",
+            "Have you spent time in nature recently?",
+            "Do you have a hobby you enjoy?",
+            "Have you practiced self-compassion today?"
+        ];
+
+        const resultMessages = [
+            "You're doing amazing! Keep nurturing your well-being - you're clearly doing something right!",
+            "You're in a good place overall! Keep checking in with yourself and maintaining these positive habits.",
+            "You're managing well, but there might be some areas where you could give yourself more care and attention.",
+            "It seems like things might be a bit overwhelming right now. Remember to be kind to yourself and reach out for support when needed.",
+            "It sounds like you're going through a challenging time. Please remember you're not alone, and small positive steps can make a difference."
+        ];
+
+        const randomMessages = [
+            "You're doing better than you think - keep going!",
+            "Your presence makes the world a little brighter.",
+            "Today is a fresh start, no matter what happened before.",
+            "You've overcome challenges before, and you'll do it again.",
+            "Even small steps forward are victories worth celebrating.",
+            "Your kindness to others starts with kindness to yourself.",
+            "This moment is all you need to begin anew.",
+            "You're allowed to take up space and ask for what you need.",
+            "Progress isn't always visible, but it's always happening.",
+            "You're stronger than you realize.",
+            "Every breath you take is a chance to reset and begin again.",
+            "You deserve rest, joy, and all good things in life.",
+            "This is just one chapter in your amazing story.",
+            "You're exactly where you need to be right now.",
+            "Your worth isn't defined by productivity or achievements.",
+            "The fact that you're trying is something to be proud of.",
+            "You're allowed to feel both hopeful and tired at the same time.",
+            "Growth happens even when you can't see it happening.",
+            "You're never too far gone to find your way back to peace.",
+            "Your journey is uniquely yours, and that's something beautiful."
+        ];
+
+        // DOM Elements
+        const quizSection = document.getElementById('quiz-section');
+        const resultSection = document.getElementById('result-section');
+        const questionText = document.getElementById('question-text');
+        const questionCount = document.getElementById('question-count');
+        const yesButton = document.getElementById('yes-button');
+        const noButton = document.getElementById('no-button');
+        const nextButton = document.getElementById('next-button');
+        const backButton = document.getElementById('back-button');
+        const restartButton = document.getElementById('restart-button');
+        const scoreText = document.getElementById('score-text');
+        const resultMessage = document.getElementById('result-message');
+        const randomMessage = document.getElementById('random-message');
+
+        // State
+        let currentQuestion = 0;
+        let answers = {};
+        let showResult = false;
+        let score = 0;
+
+        // Initialize
+        function init() {
+            currentQuestion = 0;
+            answers = {};
+            showResult = false;
+            score = 0;
+            quizSection.style.display = 'block';
+            resultSection.style.display = 'none';
+            updateQuestion();
+        }
+
+        // Update question display
+        function updateQuestion() {
+            questionText.textContent = questions[currentQuestion];
+            questionCount.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            
+            // Reset button states
+            yesButton.classList.remove('selected');
+            noButton.classList.remove('selected');
+            
+            // Restore previous answer if exists
+            if (answers[currentQuestion] === 'yes') {
+                yesButton.classList.add('selected');
+                nextButton.disabled = false;
+            } else if (answers[currentQuestion] === 'no') {
+                noButton.classList.add('selected');
+                nextButton.disabled = false;
+            } else {
+                nextButton.disabled = true;
+            }
+            
+            // Enable/disable back button
+            backButton.disabled = currentQuestion === 0;
+        }
+
+        // Handle answer selection
+        function handleAnswer(answer) {
+            answers[currentQuestion] = answer;
+            nextButton.disabled = false;
+            yesButton.classList.toggle('selected', answer === 'yes');
+            noButton.classList.toggle('selected', answer === 'no');
+        }
+
+        // Handle next question
+        function handleNext() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                updateQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Handle back
+        function handleBack() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                updateQuestion();
+            }
+        }
+
+        // Show results
+        function showResults() {
+            quizSection.style.display = 'none';
+            resultSection.style.display = 'block';
+            
+            // Calculate score
+            score = Object.values(answers).filter(a => a === 'yes').length;
+            scoreText.textContent = `You answered "yes" to ${score} out of ${questions.length} questions.`;
+            
+            // Set result message
+            if (score >= 25) {
+                resultMessage.textContent = resultMessages[0];
+            } else if (score >= 20) {
+                resultMessage.textContent = resultMessages[1];
+            } else if (score >= 15) {
+                resultMessage.textContent = resultMessages[2];
+            } else if (score >= 10) {
+                resultMessage.textContent = resultMessages[3];
+            } else {
+                resultMessage.textContent = resultMessages[4];
+            }
+            
+            // Set random message
+            const randomIndex = Math.floor(Math.random() * randomMessages.length);
+            randomMessage.textContent = randomMessages[randomIndex];
+        }
+
+        // Event listeners
+        yesButton.addEventListener('click', () => handleAnswer('yes'));
+        noButton.addEventListener('click', () => handleAnswer('no'));
+        nextButton.addEventListener('click', handleNext);
+        backButton.addEventListener('click', handleBack);
+        restartButton.addEventListener('click', init);
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
